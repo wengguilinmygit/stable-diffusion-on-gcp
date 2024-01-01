@@ -71,7 +71,7 @@ kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/container
 
 ## Create Cloud Artifacts as Docker Repo
 ```
-BUILD_REGIST=<replace this with your preferred Artifacts repo name>
+BUILD_REGIST="artifacts_repo_SD"
 
 gcloud artifacts repositories create ${BUILD_REGIST} --repository-format=docker \
 --location=${REGION}
@@ -128,29 +128,6 @@ kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-ad
 
 kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/k8s-stackdriver/master/custom-metrics-stackdriver-adapter/deploy/production/adapter_new_resource_model.yaml
 ```
-
-If you use GCS instead of Filestore, Workload Identity in your cluster is enabled, so additional steps are necessary. In the commands below, use your Project ID as and Google Service Account. \
-Make sure your has monitoring.viewer IAM role. \
--==============================
-```
-gcloud projects add-iam-policy-binding \
-    ${PROJECT_ID} \
-    --member="serviceAccount:${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" \
-    --role="roles/monitoring.viewer"
-```
-Create IAM Policy Binding:
-```
-gcloud iam service-accounts add-iam-policy-binding --role  roles/iam.workloadIdentityUser \
---member "serviceAccount:${PROJECT_ID}.svc.id.goog[custom-metrics/custom-metrics-stackdriver-adapter]" ${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com
-```
-Annotate the Custom Metrics - Stackdriver Adapter service account:
-```
-kubectl annotate serviceaccount --namespace custom-metrics \
-  custom-metrics-stackdriver-adapter \
-  iam.gke.io/gcp-service-account=${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com
-```
-GCS additional is over \
--==============================
 
 Deploy horizonal pod autoscaler policy on the Stable Diffusion deployment
 ```shell
