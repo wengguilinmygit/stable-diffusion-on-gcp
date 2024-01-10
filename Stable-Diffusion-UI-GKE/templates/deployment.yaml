@@ -31,10 +31,12 @@ spec:
       volumes:
         - name: stable-diffusion-storage
           persistentVolumeClaim:
-            claimName: $fileshare_name # replace with fileshare name
+            #claimName: $fileshare_name # replace with fileshare name
+            claimName: stable-diffusion-fileStore-FileShare
       containers:
       - name: stable-diffusion-webui
-        image: $image_url # e.g. us-central1-docker.pkg.dev/<PROJECT_ID>/<BUILD_REGIST>/sd-webui:0.1
+        #image: $image_url # e.g. us-central1-docker.pkg.dev/<PROJECT_ID>/<BUILD_REGIST>/sd-webui:0.1
+        image: us-central1-docker.pkg.dev/myttsproject-316308/artifacts_repo_SD/sd-webui:inference
         resources:
           limits:
             cpu: 2
